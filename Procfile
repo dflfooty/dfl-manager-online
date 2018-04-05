@@ -1,0 +1,1 @@
+web: java -jar target/dflmngr-online-1.0-SNAPSHOT.jar
