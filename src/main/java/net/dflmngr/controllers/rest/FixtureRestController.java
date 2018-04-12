@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.dflmngr.model.web.Fixture;
+import net.dflmngr.model.web.RoundFixtures;
 import net.dflmngr.services.FixtureService;
 
 @RestController
@@ -28,8 +28,8 @@ public class FixtureRestController {
     }
 	
 	@RequestMapping(value = "/fixtures", method = RequestMethod.GET, produces = "application/json")
-	public List<Fixture> fixtures(Model model) {		
-		List<Fixture> fixtures = fixtureService.getFixtures();		
+	public List<RoundFixtures> fixtures(Model model) {		
+		List<RoundFixtures> fixtures = fixtureService.getFixtures();		
 		return fixtures;
 	}
 }

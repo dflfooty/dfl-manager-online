@@ -14,7 +14,8 @@ import org.springframework.stereotype.Service;
 import net.dflmngr.model.entities.DflFixture;
 import net.dflmngr.model.entities.DflTeam;
 import net.dflmngr.model.entities.DflTeamScores;
-import net.dflmngr.model.web.Fixture;
+import net.dflmngr.model.web.GameFixture;
+import net.dflmngr.model.web.RoundFixtures;
 import net.dflmngr.repositories.DflFixtureRepository;
 import net.dflmngr.repositories.DflTeamRepository;
 import net.dflmngr.repositories.DflTeamScoresRepository;
@@ -35,9 +36,9 @@ public class FixtureService {
 		this.dflTeamRepository = dflTeamRepository;
 	}
 	
-	public List<Fixture> getFixtures() {
+	public List<RoundFixtures> getFixtures() {
 		
-		List<Fixture> fixtures = new ArrayList<>();
+		List<RoundFixtures> fixtures = new ArrayList<>();
 		
 		List<DflFixture> dflFixtures = dflFixtureRepository.findAll();
 		
@@ -50,35 +51,66 @@ public class FixtureService {
 												  teamScore -> teamScore.getTeamCode() + ":" + teamScore.getRound(), teamScore -> teamScore));
 		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(team -> team.getTeamCode(), team -> team));
 		
+		Comparator<DflFixture> dflFixtureComparator = Comparator.comparingInt(DflFixture::getRound).thenComparingInt(DflFixture::getGame);
+		dflFixtures.sort(dflFixtureComparator);
+		
+		int currentRound = 1;
+		RoundFixtures roundFixtures = new RoundFixtures();
+		List<GameFixture> games = new ArrayList<>();
+		
+		Comparator<GameFixture> gamesComparator = Comparator.comparingInt(GameFixture::getGame);
+		
 		for(DflFixture dflFixture : dflFixtures) {
-			Fixture fixture = new Fixture();
+			GameFixture game = new GameFixture();
 			
-			fixture.setRound(dflFixture.getRound());
-			fixture.setGame(dflFixture.getGame());
-			fixture.setHomeTeam(dflFixture.getHomeTeam());
-			fixture.setAwayTeam(dflFixture.getAwayTeam());
+			game.setGame(dflFixture.getGame());
+			game.setGame(dflFixture.getGame());
+			game.setHomeTeam(dflFixture.getHomeTeam());
+			game.setAwayTeam(dflFixture.getAwayTeam());
 			
 			String homeHashKey = dflFixture.getHomeTeam() + ":" + dflFixture.getRound();
 			String awayHashKey = dflFixture.getAwayTeam() + ":" + dflFixture.getRound();
 			
 			if(dflTeamScores.containsKey(homeHashKey) && dflTeamScores.containsKey(awayHashKey)) {
-			
-				fixture.setHomeTeamScore(dflTeamScores.get(homeHashKey).getScore());
-				fixture.setAwayTeamScore(dflTeamScores.get(awayHashKey).getScore());
+				
+				game.setHomeTeamScore(dflTeamScores.get(homeHashKey).getScore());
+				game.setAwayTeamScore(dflTeamScores.get(awayHashKey).getScore());
 				
 				String resultsUri = "/results/" + dflFixture.getRound() + "/" + dflFixture.getGame();
 	 			
-				fixture.setResultsUri(resultsUri);
+				game.setResultsUri(resultsUri);
 			}
 			
-			fixture.setHomeTeamDisplayName(dflTeams.get(fixture.getHomeTeam()).getName());
-			fixture.setAwayTeamDisplayName(dflTeams.get(fixture.getAwayTeam()).getName());
+			game.setHomeTeamDisplayName(dflTeams.get(dflFixture.getHomeTeam()).getShortName());
+			game.setAwayTeamDisplayName(dflTeams.get(dflFixture.getAwayTeam()).getShortName());
 			
-			fixtures.add(fixture);
+			if(currentRound == dflFixture.getRound()) {
+				games.add(game);
+			} else {
+				games.sort(gamesComparator);
+				
+				roundFixtures.setRound(currentRound);
+				roundFixtures.setGames(games);
+				fixtures.add(roundFixtures);
+				
+				roundFixtures = new RoundFixtures();
+				games = new ArrayList<>();
+				games.add(game);
+				
+				currentRound = dflFixture.getRound();				
+			}
 		}
 		
-		Comparator<Fixture> comparator = Comparator.comparingInt(Fixture::getRound).thenComparingInt(Fixture::getGame);
-		fixtures.sort(comparator);
+		if(!games.isEmpty()) {
+			games.sort(gamesComparator);
+			
+			roundFixtures.setRound(currentRound);
+			roundFixtures.setGames(games);
+			fixtures.add(roundFixtures);
+		}
+		
+		Comparator<RoundFixtures> roundsComparator = Comparator.comparingInt(RoundFixtures::getRound);
+		fixtures.sort(roundsComparator);
 		
 		return fixtures;
 	}

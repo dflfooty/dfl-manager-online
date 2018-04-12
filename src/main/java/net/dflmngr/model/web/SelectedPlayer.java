@@ -10,12 +10,13 @@ public class SelectedPlayer {
 	private boolean scoreUsed;
 	private boolean isDnp;
 	private String replacementInd;
+	private int emgSort;
 	private PlayerStats stats;
 		
 	public SelectedPlayer() {}
 
 	public SelectedPlayer(int playerId, int teamPlayerId, String name, String position, boolean hasPlayer,
-			boolean scoreUsed, boolean isDnp, String replacementInd, PlayerStats stats) {
+			boolean scoreUsed, boolean isDnp, String replacementInd, int emgSort, PlayerStats stats) {
 		super();
 		this.playerId = playerId;
 		this.teamPlayerId = teamPlayerId;
@@ -25,6 +26,7 @@ public class SelectedPlayer {
 		this.scoreUsed = scoreUsed;
 		this.isDnp = isDnp;
 		this.replacementInd = replacementInd;
+		this.emgSort = emgSort;
 		this.stats = stats;
 	}
 
@@ -76,6 +78,12 @@ public class SelectedPlayer {
 	public void setReplacementInd(String replacementInd) {
 		this.replacementInd = replacementInd;
 	}
+	public int getEmgSort() {
+		return emgSort;
+	}
+	public void setEmgSort(int emgSort) {
+		this.emgSort = emgSort;
+	}
 	public PlayerStats getStats() {
 		return stats;
 	}
@@ -87,6 +95,6 @@ public class SelectedPlayer {
 	public String toString() {
 		return "SelectedPlayer [playerId=" + playerId + ", teamPlayerId=" + teamPlayerId + ", name=" + name
 				+ ", position=" + position + ", hasPlayer=" + hasPlayer + ", scoreUsed=" + scoreUsed + ", isDnp="
-				+ isDnp + ", replacementInd=" + replacementInd + ", stats=" + stats + "]";
+				+ isDnp + ", replacementInd=" + replacementInd + ", emgSort=" + emgSort + ", stats=" + stats + "]";
 	}
 }

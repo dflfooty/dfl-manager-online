@@ -10,12 +10,13 @@ public class TeamResults {
 	private List<SelectedPlayer> emergencies;
 	private int score;
 	private int predictedScore;
-	private boolean emergencyUsed;
+	private int trend;
+	private String emgInd;
 	
 	public TeamResults() {}
 	
 	public TeamResults(String teamCode, String teamName, List<SelectedPlayer> players,
-			List<SelectedPlayer> emergencies, int score, int predictedScore, boolean emergencyUsed) {
+			List<SelectedPlayer> emergencies, int score, int predictedScore, int trend, String emgInd) {
 		super();
 		this.teamCode = teamCode;
 		this.teamName = teamName;
@@ -23,7 +24,8 @@ public class TeamResults {
 		this.emergencies = emergencies;
 		this.score = score;
 		this.predictedScore = predictedScore;
-		this.emergencyUsed = emergencyUsed;
+		this.trend = trend;
+		this.emgInd = emgInd;
 	}
 
 	public String getTeamCode() {
@@ -62,17 +64,23 @@ public class TeamResults {
 	public void setPredictedScore(int predictedScore) {
 		this.predictedScore = predictedScore;
 	}
-	public boolean isEmergencyUsed() {
-		return emergencyUsed;
+	public int getTrend() {
+		return trend;
 	}
-	public void setEmergencyUsed(boolean emergencyUsed) {
-		this.emergencyUsed = emergencyUsed;
+	public void setTrend(int trend) {
+		this.trend = trend;
+	}
+	public String getEmgInd() {
+		return emgInd;
+	}
+	public void setEmgInd(String emgInd) {
+		this.emgInd = emgInd;
 	}
 
 	@Override
 	public String toString() {
 		return "TeamResults [teamCode=" + teamCode + ", teamName=" + teamName + ", players=" + players
 				+ ", emergencies=" + emergencies + ", score=" + score + ", predictedScore=" + predictedScore
-				+ ", emergencyUsed=" + emergencyUsed + "]";
+				+ ", trend=" + trend + ", emgInd=" + emgInd + "]";
 	}
 }

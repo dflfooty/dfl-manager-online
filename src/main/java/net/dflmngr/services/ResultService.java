@@ -86,8 +86,6 @@ public class ResultService {
 	
 	private TeamResults getTeamResults(int round, String teamCode) {
 		
-		System.out.println("Round: " + round + " Team: " + teamCode);
-		
 		TeamResults teamResults = new TeamResults();
 		
 		DflTeam team = dflTeamRepository.findOne(teamCode);
@@ -107,6 +105,28 @@ public class ResultService {
 		}
 		
 		teamResults.setPlayers(players);
+		
+		boolean star = false;
+		boolean doubleStar = false;
+		
+		for(SelectedPlayer emg : emergencies) {
+			if(emg.getReplacementInd() != null) {
+				if(emg.getReplacementInd().equals("*")) {
+					star = true;
+				} else if(emg.getReplacementInd().equals("**")) {
+					doubleStar = true;
+				}
+			}
+		}
+		
+		if(star && !doubleStar) {
+			teamResults.setEmgInd("*");
+		} else if(!star && doubleStar) {
+			teamResults.setEmgInd("**");
+		} else if(star && doubleStar) {
+			teamResults.setEmgInd("*/**");
+		}
+		
 		teamResults.setEmergencies(emergencies);
 		
 		DflTeamScoresPK dflTeamScoresPK = new DflTeamScoresPK();
@@ -119,10 +139,11 @@ public class ResultService {
 		dflTeamPredictedScoresPK.setTeamCode(teamCode);
 		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findOne(dflTeamPredictedScoresPK);
 		
-		System.out.println("Predicted Scores: " + dflTeamPredictedScore);
-		
 		teamResults.setScore(dflTeamScore.getScore());
 		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
+		
+		int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
+		teamResults.setTrend(trend);
 		
 		return teamResults;
 	}
@@ -135,7 +156,7 @@ public class ResultService {
 		
 		DflPlayer player = dflPlayerRepository.findOne(selectedPlayer.getPlayerId());
 		
-		if(player.getInitial() == null) {
+		if(player.getInitial() == null || player.getInitial().isEmpty()) {
 			sp.setName(player.getFirstName() + " " + player.getLastName());
 		} else {
 			sp.setName(player.getFirstName() + " " + player.getInitial() + ". " + player.getLastName());
@@ -146,6 +167,14 @@ public class ResultService {
 		sp.setScoreUsed(selectedPlayer.isScoreUsed());
 		sp.setDnp(selectedPlayer.isDnp());
 		sp.setReplacementInd(selectedPlayer.getReplacementInd());
+		
+		if(selectedPlayer.getReplacementInd() != null && selectedPlayer.getReplacementInd().equals("*")) {
+			sp.setEmgSort(1);
+		} else if(selectedPlayer.getReplacementInd() != null && selectedPlayer.getReplacementInd().equals("**")) {
+			sp.setEmgSort(2);
+		} else {
+			sp.setEmgSort(selectedPlayer.isEmergency());
+		}
 		
 		sp.setStats(getPlayerStats(selectedPlayer.getRound(), selectedPlayer.getPlayerId()));
 		
@@ -159,16 +188,18 @@ public class ResultService {
 				
 		RawPlayerStats rawPlayerStats = rawPlayerStatsRepository.findByRoundAndTeamAndJumperNo(round, aflPlayer.getTeamId(), aflPlayer.getJumperNo());
 		
-		playerStats.setKicks(rawPlayerStats.getKicks());
-		playerStats.setHandballs(rawPlayerStats.getHandballs());
-		playerStats.setDisposals(rawPlayerStats.getDisposals());
-		playerStats.setMarks(rawPlayerStats.getMarks());
-		playerStats.setHitouts(rawPlayerStats.getHitouts());
-		playerStats.setFreesFor(rawPlayerStats.getFreesFor());
-		playerStats.setFreesAgainst(rawPlayerStats.getFreesAgainst());
-		playerStats.setTackles(rawPlayerStats.getTackles());
-		playerStats.setGoals(rawPlayerStats.getGoals());
-		playerStats.setBehinds(rawPlayerStats.getBehinds());
+		if(rawPlayerStats != null) {
+			playerStats.setKicks(rawPlayerStats.getKicks());
+			playerStats.setHandballs(rawPlayerStats.getHandballs());
+			playerStats.setDisposals(rawPlayerStats.getDisposals());
+			playerStats.setMarks(rawPlayerStats.getMarks());
+			playerStats.setHitouts(rawPlayerStats.getHitouts());
+			playerStats.setFreesFor(rawPlayerStats.getFreesFor());
+			playerStats.setFreesAgainst(rawPlayerStats.getFreesAgainst());
+			playerStats.setTackles(rawPlayerStats.getTackles());
+			playerStats.setGoals(rawPlayerStats.getGoals());
+			playerStats.setBehinds(rawPlayerStats.getBehinds());
+		}
 		
 		DflPlayerScoresPK dflPlayerScoresPK = new DflPlayerScoresPK();
 		dflPlayerScoresPK.setPlayerId(playerId);
@@ -182,8 +213,19 @@ public class ResultService {
 		
 		DflPlayerPredictedScores dflPlayerPredictedScores = dflPlayerPredictedScoresRepository.findOne(dflPlayerPredictedScoresPK);
 		
-		playerStats.setScore(dflPlayerScores.getScore());
-		playerStats.setPredictedScore(dflPlayerPredictedScores.getPredictedScore());
+		if(dflPlayerPredictedScores != null) {
+			playerStats.setPredictedScore(dflPlayerPredictedScores.getPredictedScore());
+		} else {
+			playerStats.setPredictedScore(25);
+		}
+		
+		int trend = 0;
+		if(dflPlayerScores != null) {
+			playerStats.setScore(dflPlayerScores.getScore());
+			trend = dflPlayerScores.getScore() - playerStats.getPredictedScore();
+		} else {
+			trend = trend - playerStats.getPredictedScore();
+		}
 		
 		return playerStats;
 	}

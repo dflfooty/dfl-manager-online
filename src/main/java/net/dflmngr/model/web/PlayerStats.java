@@ -14,11 +14,12 @@ public class PlayerStats {
 	private int behinds;
 	private int score;
 	private int predictedScore;
+	private int trend;
 	
 	public PlayerStats() {}
 	
 	public PlayerStats(int kicks, int handballs, int disposals, int marks, int hitouts, int freesFor, int freesAgainst, 
-			           int tackles, int goals, int behinds, int score, int predictedScore) {
+			           int tackles, int goals, int behinds, int score, int predictedScore, int trend) {
 		this.kicks = kicks;
 		this.handballs = handballs;
 		this.disposals = disposals;
@@ -31,6 +32,7 @@ public class PlayerStats {
 		this.behinds = behinds;
 		this.score = score;
 		this.predictedScore = predictedScore;
+		this.trend = trend;
 	}
 
 	public int getKicks() {
@@ -128,12 +130,19 @@ public class PlayerStats {
 	public void setPredictedScore(int predictedScore) {
 		this.predictedScore = predictedScore;
 	}
+	public int getTrend() {
+		return trend;
+	}
+
+	public void setTrend(int trend) {
+		this.trend = trend;
+	}
 
 	@Override
 	public String toString() {
 		return "PlayerStats [kicks=" + kicks + ", handballs=" + handballs + ", disposals=" + disposals + ", marks="
 				+ marks + ", hitouts=" + hitouts + ", freesFor=" + freesFor + ", freesAgainst=" + freesAgainst
 				+ ", tackles=" + tackles + ", goals=" + goals + ", behinds=" + behinds + ", score=" + score
-				+ ", predictedScore=" + predictedScore + "]";
+				+ ", predictedScore=" + predictedScore + ", trend=" + trend + "]";
 	}
 }

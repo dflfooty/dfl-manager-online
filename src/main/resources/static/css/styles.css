@@ -12,28 +12,31 @@ html, body {
 	padding: 0 0 60px;
 }
 
-#footer {
-	height: 60px;
-	background-color: #f5f5f5;
+.container {
+	margin: 0 5px;
+	padding: 0 5px;
 }
 
 #wrap>.container {
-	padding: 50px 5px 0;
+	padding: 60px 5px 0;
 }
 
-.container .credit {
-	margin: 20px 0;
+.center {
+	margin: 0 auto;
 }
 
-#footer>.container {
-	padding-left: 15px;
-	padding-right: 15px;
+.pad-5 {
+	padding: 5px;
 }
 
-code {
-	font-size: 80%;
+.margin-tb-5 {
+	margin: 5px 0;
 }
 
-.top-buffer {
-	margin-top: 10px;
+.bold-font {
+	font-weight: bold;
+}
+
+.cursor-pointer {
+	cursor: pointer;
 }

@@ -1,8 +1,7 @@
 package net.dflmngr.model.web;
 
-public class Fixture {
+public class GameFixture {
 
-	int round;
 	int game;
 	String homeTeam;
 	String awayTeam;
@@ -12,11 +11,10 @@ public class Fixture {
 	String awayTeamDisplayName;
 	String resultsUri;
 	
-	public Fixture(){}
+	public GameFixture(){}
 	
-	public Fixture(int round, int game, String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore,
+	public GameFixture(int game, String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore,
 			String homeTeamDisplayName, String awayTeamDisplayName, String resultsUri) {
-		this.round = round;
 		this.game = game;
 		this.homeTeam = homeTeam;
 		this.awayTeam = awayTeam;
@@ -27,12 +25,6 @@ public class Fixture {
 		this.resultsUri = resultsUri;
 	}
 	
-	public int getRound() {
-		return round;
-	}
-	public void setRound(int round) {
-		this.round = round;
-	}
 	public int getGame() {
 		return game;
 	}
@@ -84,8 +76,8 @@ public class Fixture {
 	
 	@Override
 	public String toString() {
-		return "Fixture [round=" + round + ", game=" + game + ", homeTeam=" + homeTeam + ", awayTeam=" + awayTeam
-				+ ", homeTeamScore=" + homeTeamScore + ", awayTeamScore=" + awayTeamScore + ", resultsUri=" + resultsUri
-				+ "]";
+		return "GameFixture [game=" + game + ", homeTeam=" + homeTeam + ", awayTeam=" + awayTeam + ", homeTeamScore="
+				+ homeTeamScore + ", awayTeamScore=" + awayTeamScore + ", homeTeamDisplayName=" + homeTeamDisplayName
+				+ ", awayTeamDisplayName=" + awayTeamDisplayName + ", resultsUri=" + resultsUri + "]";
 	}
 }
