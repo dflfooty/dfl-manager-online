@@ -9,6 +9,7 @@ public class TeamResults {
 	private List<SelectedPlayer> players;
 	private List<SelectedPlayer> emergencies;
 	private int score;
+	private int currentPredictedScore;
 	private int predictedScore;
 	private int trend;
 	private String emgInd;
@@ -58,6 +59,13 @@ public class TeamResults {
 	public void setScore(int score) {
 		this.score = score;
 	}
+	public int getCurrentPredictedScore() {
+		return currentPredictedScore;
+	}
+	public void setCurrentPredictedScore(int currentPredictedScore) {
+		this.currentPredictedScore = currentPredictedScore;
+	}
+
 	public int getPredictedScore() {
 		return predictedScore;
 	}
@@ -80,7 +88,8 @@ public class TeamResults {
 	@Override
 	public String toString() {
 		return "TeamResults [teamCode=" + teamCode + ", teamName=" + teamName + ", players=" + players
-				+ ", emergencies=" + emergencies + ", score=" + score + ", predictedScore=" + predictedScore
-				+ ", trend=" + trend + ", emgInd=" + emgInd + "]";
+				+ ", emergencies=" + emergencies + ", score=" + score + ", currentPredictedScore="
+				+ currentPredictedScore + ", predictedScore=" + predictedScore + ", trend=" + trend + ", emgInd="
+				+ emgInd + "]";
 	}
 }

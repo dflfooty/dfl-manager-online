@@ -96,9 +96,20 @@ public class ResultService {
 		List<SelectedPlayer> players = new ArrayList<>();
 		List<SelectedPlayer> emergencies = new ArrayList<>();
 		
+		int currentPredictedScore = 0;
 		for(DflSelectedPlayer selectedPlayer : selectedTeam) {
 			if(selectedPlayer.isScoreUsed()) {
-				players.add(getSelectedPlayer(selectedPlayer));
+				SelectedPlayer sp = getSelectedPlayer(selectedPlayer);
+				players.add(sp);
+				if(sp.isDnp()) {
+					currentPredictedScore = currentPredictedScore + 0;
+				} else {
+					if(sp.getStats().getScore() == 0) {
+						currentPredictedScore = currentPredictedScore + sp.getStats().getPredictedScore();
+					} else {
+						currentPredictedScore = currentPredictedScore + sp.getStats().getScore();
+					}
+				}
 			} else {
 				emergencies.add(getSelectedPlayer(selectedPlayer));
 			}
@@ -140,9 +151,11 @@ public class ResultService {
 		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findOne(dflTeamPredictedScoresPK);
 		
 		teamResults.setScore(dflTeamScore.getScore());
+		teamResults.setCurrentPredictedScore(currentPredictedScore);
 		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
 		
-		int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
+		//int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
+		int trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
 		teamResults.setTrend(trend);
 		
 		return teamResults;
@@ -226,6 +239,8 @@ public class ResultService {
 		} else {
 			trend = trend - playerStats.getPredictedScore();
 		}
+		
+		playerStats.setTrend(trend);
 		
 		return playerStats;
 	}
