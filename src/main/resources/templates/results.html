@@ -3,7 +3,7 @@
 <head>
     <title th:text="#{results.page.title}">Ladder</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="refresh" content="300">
+    <meta http-equiv="refresh" content="300"/>
     <link rel="stylesheet" href="../../../static/css/bootstrap-3.3.7.min.css" th:href="@{/static/css/bootstrap-3.3.7.min.css}" type="text/css" media="screen"/>
 	<link rel="stylesheet" href="../../../static/css/datatables-1.10.16.min.css" th:href="@{/static/css/datatables-1.10.16.min.css}" type="text/css" media="screen"/>
 	<link rel="stylesheet" href="../../../static/css/styles.css" th:href="@{/static/css/styles.css}" type="text/css" media="screen"/>
@@ -91,21 +91,34 @@
 		                    <td th:text="${player.stats.trend}">Trend</td>
 		                </tr>
 		            </tbody>
-		            <tfoot>
-		            	<tr>
-		                	<td colspan="12"></td>
-		                	<td><strong>Total</strong></td>
-		                	<td th:text="${results.homeTeam.score}"><strong>Score</strong></td>
-		                	<td th:text="${results.homeTeam.currentPredictedScore}"><strong>Predicted</strong></td>
-		                	<td th:text="${results.homeTeam.trend}"><strong>Trend</strong></td>
-		                </tr>
-		                <tr>
-		                	<td colspan="11"></td>
-		                	<td colspan="3"><strong>Pre-game Predicted</strong></td>
-		                	<td th:text="${results.homeTeam.predictedScore}"><strong>Pre-Game Predicted</strong></td>
-		                	<td/>
-		                </tr>
-		            </tfoot>
+		            <div th:if="${results.homeTeam.currentPredictedScore == results.homeTeam.score}">
+			            <tfoot>
+			            	<tr>
+			                	<td colspan="12"></td>
+			                	<td><strong>Total</strong></td>
+			                	<td th:text="${results.homeTeam.score}"><strong>Score</strong></td>
+			                	<td th:text="${results.homeTeam.predictedScore}"><strong>Predicted</strong></td>
+			                	<td th:text="${results.homeTeam.trend}"><strong>Trend</strong></td>
+			                </tr>
+			            </tfoot>
+		            </div>
+		            <div th:unless="${results.homeTeam.currentPredictedScore == results.homeTeam.score}">
+			           <tfoot>
+			            	<tr>
+			                	<td colspan="12"></td>
+			                	<td><strong>Total</strong></td>
+			                	<td th:text="${results.homeTeam.score}"><strong>Score</strong></td>
+			                	<td th:text="${results.homeTeam.currentPredictedScore}"><strong>Predicted</strong></td>
+			                	<td th:text="${results.homeTeam.trend}"><strong>Trend</strong></td>
+			                </tr>
+			                <tr>
+			                	<td colspan="12"></td>
+			                	<td colspan="2"><strong>Pre-game</strong></td>
+			                	<td th:text="${results.homeTeam.predictedScore}"><strong>Pre-Game Predicted</strong></td>
+			                	<td/>
+			                </tr>
+			            </tfoot>
+			        </div>
 		        </table>
 		        <table id="resultsTeamEmergenciesHome" class="table table-striped table-bordered" cellspacing="0" width="100%">
            			<thead>
@@ -212,21 +225,34 @@
 		                    <td th:text="${player.stats.trend}">Trend</td>
 		                </tr>
 		            </tbody>
-		            <tfoot>
-		            	<tr>
-		                	<td colspan="12"></td>
-		                	<td><strong>Total</strong></td>
-		                	<td th:text="${results.awayTeam.score}"><strong>Score</strong></td>
-		                	<td th:text="${results.awayTeam.currentPredictedScore}"><strong>Predicted</strong></td>
-		                	<td th:text="${results.awayTeam.trend}"><strong>Trend</strong></td>
-		                </tr>
-		                <tr>
-		                	<td colspan="11"></td>
-		                	<td colspan="3"><strong>Pre-game Predicted</strong></td>
-		                	<td th:text="${results.homeTeam.predictedScore}"><strong>Pre-Game Predicted</strong></td>
-		                	<td/>
-		                </tr>
-		            </tfoot>
+		            <div th:if="${results.awayTeam.currentPredictedScore == results.awayTeam.score}">
+			            <tfoot>
+			            	<tr>
+			                	<td colspan="12"></td>
+			                	<td><strong>Total</strong></td>
+			                	<td th:text="${results.awayTeam.score}"><strong>Score</strong></td>
+			                	<td th:text="${results.awayTeam.predictedScore}"><strong>Predicted</strong></td>
+			                	<td th:text="${results.awayTeam.trend}"><strong>Trend</strong></td>
+			                </tr>
+			            </tfoot>
+		            </div>
+		            <div th:unless="${results.awayTeam.currentPredictedScore == results.awayTeam.score}">
+			            <tfoot>
+			            	<tr>
+			                	<td colspan="12"></td>
+			                	<td><strong>Total</strong></td>
+			                	<td th:text="${results.awayTeam.score}"><strong>Score</strong></td>
+			                	<td th:text="${results.awayTeam.currentPredictedScore}"><strong>Predicted</strong></td>
+			                	<td th:text="${results.awayTeam.trend}"><strong>Trend</strong></td>
+			                </tr>
+			                <tr>
+			                	<td colspan="12"></td>
+			                	<td colspan="2"><strong>Pre-game</strong></td>
+			                	<td th:text="${results.awayTeam.predictedScore}"><strong>Pre-Game Predicted</strong></td>
+			                	<td/>
+			                </tr>
+			            </tfoot>
+			        </div>
 		        </table>
 		        <table id="resultsTeamEmergenciesAway" class="table table-striped table-bordered" cellspacing="0" width="100%">
            			<thead>

@@ -155,7 +155,12 @@ public class ResultService {
 		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
 		
 		//int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
-		int trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
+		int trend = 0;
+		if(currentPredictedScore == dflTeamPredictedScore.getPredictedScore()) {
+			trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
+		} else {
+			trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
+		}
 		teamResults.setTrend(trend);
 		
 		return teamResults;
