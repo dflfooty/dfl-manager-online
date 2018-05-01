@@ -1,6 +1,7 @@
 package net.dflmngr.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,11 @@ import net.dflmngr.model.entities.keys.DflPlayerPredictedScoresPK;
 import net.dflmngr.model.entities.keys.DflPlayerScoresPK;
 import net.dflmngr.model.entities.keys.DflTeamPredictedScoresPK;
 import net.dflmngr.model.entities.keys.DflTeamScoresPK;
+import net.dflmngr.model.entities.keys.GlobalsPK;
+import net.dflmngr.model.web.GameMenu;
 import net.dflmngr.model.web.PlayerStats;
 import net.dflmngr.model.web.Results;
+import net.dflmngr.model.web.RoundMenu;
 import net.dflmngr.model.web.SelectedPlayer;
 import net.dflmngr.model.web.TeamResults;
 import net.dflmngr.repositories.AflPlayerRepository;
@@ -34,6 +38,7 @@ import net.dflmngr.repositories.DflSelectedPlayerRepository;
 import net.dflmngr.repositories.DflTeamPredictedScoresRepository;
 import net.dflmngr.repositories.DflTeamRepository;
 import net.dflmngr.repositories.DflTeamScoresRepository;
+import net.dflmngr.repositories.GlobalsRespository;
 import net.dflmngr.repositories.RawPlayerStatsRepository;
 
 @Service
@@ -49,13 +54,13 @@ public class ResultService {
 	private final DflPlayerPredictedScoresRepository dflPlayerPredictedScoresRepository;
 	private final DflTeamScoresRepository dflTeamScoresRepository;
 	private final DflTeamPredictedScoresRepository dflTeamPredictedScoresRepository;
-	
+	private final GlobalsRespository globalsRespository;
 	
 	@Autowired
 	public ResultService(DflFixtureRepository dflFixtureRepository, DflTeamRepository dflTeamRepository, DflPlayerRepository dflPlayerRepository, AflPlayerRepository aflPlayerRepository,
 			             DflSelectedPlayerRepository dflSelectedPlayerRepository, RawPlayerStatsRepository rawPlayerStatsRepository, DflPlayerScoresRepository dflPlayerScoresRepository,
 			             DflPlayerPredictedScoresRepository dflPlayerPredictedScoresRepository, DflTeamScoresRepository dflTeamScoresRepository,
-			             DflTeamPredictedScoresRepository dflTeamPredictedScoresRepository) {
+			             DflTeamPredictedScoresRepository dflTeamPredictedScoresRepository, GlobalsRespository globalsRespository) {
 		this.dflFixtureRepository = dflFixtureRepository;
 		this.dflTeamRepository = dflTeamRepository;
 		this.dflPlayerRepository = dflPlayerRepository;
@@ -66,6 +71,7 @@ public class ResultService {
 		this.dflPlayerPredictedScoresRepository = dflPlayerPredictedScoresRepository;
 		this.dflTeamScoresRepository = dflTeamScoresRepository;
 		this.dflTeamPredictedScoresRepository = dflTeamPredictedScoresRepository;
+		this.globalsRespository = globalsRespository;
 	}
 	
 	public Results getResults(int round, int game) {
@@ -82,6 +88,95 @@ public class ResultService {
 		results.setAwayTeam(getTeamResults(round, awayTeamCode));
 			
 		return results;
+	}
+	
+	public Results getCurrentResults() {
+		GlobalsPK globalsPK = new GlobalsPK();
+		globalsPK.setCode("currentRound");
+		globalsPK.setGroupCode("dflRef");
+		
+		int currentRound = Integer.parseInt(globalsRespository.findOne(globalsPK).getValue());
+		
+		Results results = getResults(currentRound, 1);
+		
+		return results;
+	}
+	
+	public List<RoundMenu> getMenu(int round, int game) {
+		
+		List<RoundMenu> menu = new ArrayList<>();
+		
+		List<DflFixture> dflFixtures = dflFixtureRepository.findAll();
+		
+		int currentRound = 1;
+		RoundMenu roundMenu = new RoundMenu();
+		List<GameMenu> games = new ArrayList<>();
+		Comparator<GameMenu> gamesComparator = Comparator.comparingInt(GameMenu::getGame);
+		
+		for(DflFixture dflFixture : dflFixtures) {
+			boolean homeTeamSelected = dflSelectedPlayerRepository.selectedTeamExists(dflFixture.getHomeTeam(), dflFixture.getRound());
+			boolean awayTeamSelected = dflSelectedPlayerRepository.selectedTeamExists(dflFixture.getAwayTeam(), dflFixture.getRound());
+			
+			if(homeTeamSelected || awayTeamSelected) {
+				GameMenu gameMenu = new GameMenu();
+				
+				gameMenu.setGame(dflFixture.getGame());
+				gameMenu.setHomeTeam(dflFixture.getHomeTeam());
+				gameMenu.setAwayTeam(dflFixture.getAwayTeam());
+				
+				String resultsUri = "/results/" + dflFixture.getRound() + "/" + dflFixture.getGame();
+				gameMenu.setResultsUri(resultsUri);
+				
+				if(dflFixture.getRound() == round && dflFixture.getGame() == game) {
+					gameMenu.setActive(true);
+				} else {
+					gameMenu.setActive(false);
+				}
+				
+				if(currentRound == dflFixture.getRound()) {
+					games.add(gameMenu);
+				} else {
+					games.sort(gamesComparator);
+					
+					roundMenu.setRound(currentRound);
+					roundMenu.setGames(games);
+					
+					if(currentRound == round) {
+						roundMenu.setActive(true);
+					} else {
+						roundMenu.setActive(false);
+					}
+					
+					menu.add(roundMenu);
+					
+					roundMenu = new RoundMenu();
+					games = new ArrayList<>();
+					games.add(gameMenu);
+					
+					currentRound = dflFixture.getRound();				
+				}
+			}
+		}
+		
+		if(!games.isEmpty()) {
+			games.sort(gamesComparator);
+			
+			roundMenu.setRound(currentRound);
+			roundMenu.setGames(games);
+			
+			if(currentRound == round) {
+				roundMenu.setActive(true);
+			} else {
+				roundMenu.setActive(false);
+			}
+			
+			menu.add(roundMenu);
+		}
+		
+		Comparator<RoundMenu> roundsComparator = Comparator.comparingInt(RoundMenu::getRound);
+		menu.sort(roundsComparator);
+		
+		return menu;
 	}
 	
 	private TeamResults getTeamResults(int round, String teamCode) {

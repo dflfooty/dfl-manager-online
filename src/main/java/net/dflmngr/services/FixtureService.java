@@ -64,7 +64,6 @@ public class FixtureService {
 			GameFixture game = new GameFixture();
 			
 			game.setGame(dflFixture.getGame());
-			game.setGame(dflFixture.getGame());
 			game.setHomeTeam(dflFixture.getHomeTeam());
 			game.setAwayTeam(dflFixture.getAwayTeam());
 			
