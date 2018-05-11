@@ -108,6 +108,9 @@ public class ResultService {
 		
 		List<DflFixture> dflFixtures = dflFixtureRepository.findAll();
 		
+		Comparator<DflFixture> dflFixtureComparator = Comparator.comparingInt(DflFixture::getRound).thenComparingInt(DflFixture::getGame);
+		dflFixtures.sort(dflFixtureComparator);
+		
 		int currentRound = 1;
 		RoundMenu roundMenu = new RoundMenu();
 		List<GameMenu> games = new ArrayList<>();
