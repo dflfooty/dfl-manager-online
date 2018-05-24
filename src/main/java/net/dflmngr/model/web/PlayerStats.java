@@ -15,11 +15,12 @@ public class PlayerStats {
 	private int score;
 	private int predictedScore;
 	private int trend;
+	private String scrapingStatus;
 	
 	public PlayerStats() {}
 	
 	public PlayerStats(int kicks, int handballs, int disposals, int marks, int hitouts, int freesFor, int freesAgainst, 
-			           int tackles, int goals, int behinds, int score, int predictedScore, int trend) {
+			           int tackles, int goals, int behinds, int score, int predictedScore, int trend, String scrapingStatus) {
 		this.kicks = kicks;
 		this.handballs = handballs;
 		this.disposals = disposals;
@@ -33,6 +34,7 @@ public class PlayerStats {
 		this.score = score;
 		this.predictedScore = predictedScore;
 		this.trend = trend;
+		this.scrapingStatus = scrapingStatus;
 	}
 
 	public int getKicks() {
@@ -138,11 +140,20 @@ public class PlayerStats {
 		this.trend = trend;
 	}
 
+	public String getScrapingStatus() {
+		return scrapingStatus;
+	}
+
+	public void setScrapingStatus(String scrapingStatus) {
+		this.scrapingStatus = scrapingStatus;
+	}
+
 	@Override
 	public String toString() {
 		return "PlayerStats [kicks=" + kicks + ", handballs=" + handballs + ", disposals=" + disposals + ", marks="
 				+ marks + ", hitouts=" + hitouts + ", freesFor=" + freesFor + ", freesAgainst=" + freesAgainst
 				+ ", tackles=" + tackles + ", goals=" + goals + ", behinds=" + behinds + ", score=" + score
-				+ ", predictedScore=" + predictedScore + ", trend=" + trend + "]";
+				+ ", predictedScore=" + predictedScore + ", trend=" + trend + ", scrapingStatus=" + scrapingStatus
+				+ "]";
 	}
 }

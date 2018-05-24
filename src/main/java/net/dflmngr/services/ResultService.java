@@ -315,6 +315,7 @@ public class ResultService {
 			playerStats.setTackles(rawPlayerStats.getTackles());
 			playerStats.setGoals(rawPlayerStats.getGoals());
 			playerStats.setBehinds(rawPlayerStats.getBehinds());
+			playerStats.setScrapingStatus(rawPlayerStats.getScrapingStatus());
 		}
 		
 		DflPlayerScoresPK dflPlayerScoresPK = new DflPlayerScoresPK();

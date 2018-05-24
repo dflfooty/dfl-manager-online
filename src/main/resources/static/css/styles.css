@@ -105,3 +105,15 @@ ul ul a {
 .cursor-pointer {
 	cursor: pointer;
 }
+
+.results-in-progress {
+	background-color: #fcf8e3;
+}
+
+.results-completed {
+	background-color: #d9edf7
+}
+
+.results-finalized {
+	background-color: #dff0d8;
+}
