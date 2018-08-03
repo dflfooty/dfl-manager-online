@@ -61,11 +61,7 @@ public class FixtureService {
 		logger.debug("DFL Fixtures: " + dflFixtures);
 		logger.debug("DFL Teams: " + dflTeams);
 		
-		for(DflFixture dflFixture : dflFixtures) {
-			if(dflFixture.getRound() == 19) {
-				break;
-			}
-			
+		for(DflFixture dflFixture : dflFixtures) {			
 			GameFixture game = new GameFixture();
 			
 			logger.debug("Round={}, Game={}, Home={}, Away={}" + dflFixture.getRound(), dflFixture.getGame(), dflFixture.getHomeTeam(), dflFixture.getAwayTeam());

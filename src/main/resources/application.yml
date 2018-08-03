@@ -12,4 +12,4 @@ spring:
 logging:
   level:
     net:
-      dflmngr: ${DFLMNGR_LOG_LEVEL}
+      dflmngr: ${DFLMNGR_LOG_LEVEL:info}
