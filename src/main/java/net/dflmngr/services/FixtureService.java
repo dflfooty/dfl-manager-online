@@ -61,6 +61,10 @@ public class FixtureService {
 		Comparator<GameFixture> gamesComparator = Comparator.comparingInt(GameFixture::getGame);
 		
 		for(DflFixture dflFixture : dflFixtures) {
+			if(dflFixture.getRound() == 19) {
+				break;
+			}
+			
 			GameFixture game = new GameFixture();
 			
 			game.setGame(dflFixture.getGame());
