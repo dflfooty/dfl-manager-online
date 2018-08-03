@@ -68,6 +68,8 @@ public class FixtureService {
 			
 			GameFixture game = new GameFixture();
 			
+			logger.debug("Round={}, Game={}, Home={}, Away={}" + dflFixture.getRound(), dflFixture.getGame(), dflFixture.getHomeTeam(), dflFixture.getAwayTeam());
+			
 			game.setGame(dflFixture.getGame());
 			game.setHomeTeam(dflFixture.getHomeTeam());
 			game.setAwayTeam(dflFixture.getAwayTeam());
@@ -85,7 +87,10 @@ public class FixtureService {
 				game.setResultsUri(resultsUri);
 			}
 			
+			logger.debug("Home team details={}", dflTeams.get(dflFixture.getHomeTeam()));
 			game.setHomeTeamDisplayName(dflTeams.get(dflFixture.getHomeTeam()).getShortName());
+			
+			logger.debug("Away team details={}", dflTeams.get(dflFixture.getAwayTeam()));
 			game.setAwayTeamDisplayName(dflTeams.get(dflFixture.getAwayTeam()).getShortName());
 			
 			if(currentRound == dflFixture.getRound()) {
