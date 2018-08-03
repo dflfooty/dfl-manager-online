@@ -41,8 +41,6 @@ public class FixtureService {
 		List<RoundFixtures> fixtures = new ArrayList<>();
 		
 		List<DflFixture> dflFixtures = dflFixtureRepository.findAll();
-		
-		logger.debug("DFL Fixtures: " + dflFixtures);
 				
 		List<DflTeamScores> dflTeamScoresList = dflTeamScoresRepository.findAll();
 		List<DflTeam> dflTeamsList = dflTeamRepository.findAll();
@@ -59,6 +57,9 @@ public class FixtureService {
 		List<GameFixture> games = new ArrayList<>();
 		
 		Comparator<GameFixture> gamesComparator = Comparator.comparingInt(GameFixture::getGame);
+		
+		logger.debug("DFL Fixtures: " + dflFixtures);
+		logger.debug("DFL Teams: " + dflTeams);
 		
 		for(DflFixture dflFixture : dflFixtures) {
 			if(dflFixture.getRound() == 19) {
