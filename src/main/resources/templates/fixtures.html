@@ -22,7 +22,8 @@
 			$("[id^=round]").on('click', 'tbody tr', function() {
 				console.log("Row Clicked");
 				var attr = $(this).attr('data-href');
-				if(typeof attr !== undefined && attr !== false) {
+				console.log("attr=" + attr);
+				if(typeof attr !== typeof undefined && attr !== false) {
 					console.log("Has data-href");
 					window.location.href = attr;
 				}

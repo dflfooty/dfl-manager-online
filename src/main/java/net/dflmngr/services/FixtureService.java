@@ -17,6 +17,7 @@ import net.dflmngr.model.entities.DflTeamScores;
 import net.dflmngr.model.web.GameFixture;
 import net.dflmngr.model.web.RoundFixtures;
 import net.dflmngr.repositories.DflFixtureRepository;
+import net.dflmngr.repositories.DflSelectedPlayerRepository;
 import net.dflmngr.repositories.DflTeamRepository;
 import net.dflmngr.repositories.DflTeamScoresRepository;
 
@@ -28,12 +29,14 @@ public class FixtureService {
 	private final DflFixtureRepository dflFixtureRepository;
 	private final DflTeamScoresRepository dflTeamScoresRepository;
 	private final DflTeamRepository dflTeamRepository;
+	private final DflSelectedPlayerRepository dflSelectedPlayerRepository;
 	
 	@Autowired
-	public FixtureService(DflFixtureRepository dflFixtureRepository, DflTeamScoresRepository dflTeamScoresRepository, DflTeamRepository dflTeamRepository) {
+	public FixtureService(DflFixtureRepository dflFixtureRepository, DflTeamScoresRepository dflTeamScoresRepository, DflTeamRepository dflTeamRepository, DflSelectedPlayerRepository dflSelectedPlayerRepository) {
 		this.dflFixtureRepository = dflFixtureRepository;
 		this.dflTeamScoresRepository = dflTeamScoresRepository;
 		this.dflTeamRepository = dflTeamRepository;
+		this.dflSelectedPlayerRepository = dflSelectedPlayerRepository;
 	}
 	
 	public List<RoundFixtures> getFixtures() {
@@ -74,12 +77,15 @@ public class FixtureService {
 			String awayHashKey = dflFixture.getAwayTeam() + ":" + dflFixture.getRound();
 			
 			if(dflTeamScores.containsKey(homeHashKey) && dflTeamScores.containsKey(awayHashKey)) {
-				
 				game.setHomeTeamScore(dflTeamScores.get(homeHashKey).getScore());
 				game.setAwayTeamScore(dflTeamScores.get(awayHashKey).getScore());
-				
+			}
+			
+			boolean homeTeamSelectionsExist = dflSelectedPlayerRepository.selectedTeamExists(dflFixture.getHomeTeam(), dflFixture.getRound());
+			boolean awayTeamSelectionsExist = dflSelectedPlayerRepository.selectedTeamExists(dflFixture.getAwayTeam(), dflFixture.getRound());
+			
+			if(homeTeamSelectionsExist && awayTeamSelectionsExist) {
 				String resultsUri = "/results/" + dflFixture.getRound() + "/" + dflFixture.getGame();
-	 			
 				game.setResultsUri(resultsUri);
 			}
 			
