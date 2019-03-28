@@ -261,7 +261,7 @@ public class ResultService {
 		//int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
 		int trend = 0;
 		if(currentPredictedScore == dflTeamPredictedScore.getPredictedScore()) {
-			trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
+			trend = teamResults.getScore() - dflTeamPredictedScore.getPredictedScore();
 		} else {
 			trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
 		}
