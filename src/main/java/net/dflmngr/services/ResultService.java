@@ -191,6 +191,7 @@ public class ResultService {
 		teamResults.setTeamName(team.getName());
 		
 		List<DflSelectedPlayer> selectedTeam = dflSelectedPlayerRepository.findByRoundAndTeamCode(round, teamCode);
+				
 		List<SelectedPlayer> players = new ArrayList<>();
 		List<SelectedPlayer> emergencies = new ArrayList<>();
 		
@@ -248,7 +249,12 @@ public class ResultService {
 		dflTeamPredictedScoresPK.setTeamCode(teamCode);
 		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findOne(dflTeamPredictedScoresPK);
 		
-		teamResults.setScore(dflTeamScore.getScore());
+		if(dflTeamScore != null) {
+			teamResults.setScore(dflTeamScore.getScore());
+		} else {
+			teamResults.setScore(0);
+		}
+		
 		teamResults.setCurrentPredictedScore(currentPredictedScore);
 		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
 		
