@@ -28,15 +28,29 @@ public class LadderService {
 	}
 	
 	public List<Ladder> getLadder() {
-		
-		List<Ladder> ladder = new ArrayList<>();
-		
 		List<DflLadder> dflLadder = dflLadderRepository.findCurrentDflLadder();
 		List<DflTeam> dflTeamsList = dflTeamRepository.findAll();
 		
 		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(DflTeam::getTeamCode, item -> item));
 		
-		//Map<String, DflTeam> dflTeams = getDflTeamsAsMap();
+		List<Ladder> ladder = createLadder(dflLadder, dflTeams);
+			
+		return ladder;
+	}
+	
+	public List<Ladder> getLiveLadder() {
+		List<DflLadder> dflLadder = dflLadderRepository.findLiveDflLadder();
+		List<DflTeam> dflTeamsList = dflTeamRepository.findAll();
+		
+		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(DflTeam::getTeamCode, item -> item));
+		
+		List<Ladder> ladder = createLadder(dflLadder, dflTeams);
+			
+		return ladder;
+	}
+	
+	private List<Ladder> createLadder(List<DflLadder> dflLadder, Map<String, DflTeam> dflTeams) {
+		List<Ladder> ladder = new ArrayList<>();
 		
 		for(DflLadder team : dflLadder) {
 			Ladder l = new Ladder();

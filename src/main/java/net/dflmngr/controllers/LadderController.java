@@ -33,6 +33,13 @@ public class LadderController {
     public String ladder(Model model) {
     	List<Ladder> ladder = ladderService.getLadder();
     	model.addAttribute("ladder", ladder);
+    	
+    	int round = ladder.get(0).getRound();
+    	model.addAttribute("currentRound", round);
+    	
+    	List<Ladder> liveLadder = ladderService.getLiveLadder();
+    	model.addAttribute("liveLadder", liveLadder);
+    	
     	return LADDER_VIEW;
     }
 }

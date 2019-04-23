@@ -19,6 +19,16 @@
 		    	"info": false
 		    });
 		    
+		    $("#liveLadder").DataTable({
+		    	"columnDefs": [
+					{"visible": false,  "targets": [5]}
+				],
+		    	"order": [[1, 'desc'],[7, 'desc'],[6, 'desc']],
+		    	"searching": false,
+		    	"paging": false,
+		    	"info": false
+		    });
+		    
 		    formatFloatText();
 		});
 
@@ -26,41 +36,77 @@
 </head>
 <body>
 <div id="wrap">
-<div th:replace="fragments/header::header">&nbsp;</div>
-<div class="container center">
-	<div th:unless="${#lists.isEmpty(ladder)}">
-	   <table id="ladder" class="table table-striped table-bordered center" cellspacing="0" width="100%">
-            <thead>
-	                <tr>
-		            <th>Team</th>
-		            <th>W</th>
-		            <th>L</th>
-		            <th>D</th>
-		            <th>For</th>
-		            <th>Ave For</th>
-		            <th>Agst</th>
-		            <th>Ave Agst</th>
-		            <th>Pts</th>
-		            <th>%</th>
-		        </tr>
-	        </thead>
-	        <tbody>
-                <tr th:each="entry: ${ladder}">
-                    <td th:text="${entry.displayName}">Team</td>
-                    <td th:text="${entry.wins}">W</td>
-                    <td th:text="${entry.losses}">L</td>
-                    <td th:text="${entry.draws}">D</td>
-                    <td th:text="${entry.pointsFor}">For</td>
-                    <td class="float-text" th:text="${entry.averageFor}">Ave For</td>
-                    <td th:text="${entry.pointsAgainst}">Agst</td>
-                    <td class="float-text" th:text="${entry.averageAgainst}">Ave Agst</td>
-                    <td th:text="${entry.pts}">Pts</td>
-                    <td class="float-text" th:text="${entry.percentage}">%</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+	<div th:replace="fragments/header::header">&nbsp;</div>
+	<div class="container center">
+		<div th:unless="${#lists.isEmpty(liveLadder)}">
+			<div class="panel panel-default margin-tb-5">
+		    	<div class="panel-heading bold-font">Live Ladder</div>
+		       	<div class="panel-body pad-5">
+				   <table id="ladder" class="table table-striped table-bordered center" cellspacing="0" width="100%">
+			            <thead>
+				                <tr>
+					            <th>Team</th>
+					            <th>W</th>
+					            <th>L</th>
+					            <th>D</th>
+					            <th>For</th>
+					            <th>Pts</th>
+					            <th>%</th>
+					        </tr>
+				        </thead>
+				        <tbody>
+			                <tr th:each="entry: ${liveLadder}">
+			                    <td th:text="${entry.displayName}">Team</td>
+			                    <td th:text="${entry.wins}">W</td>
+			                    <td th:text="${entry.losses}">L</td>
+			                    <td th:text="${entry.draws}">D</td>
+			                    <td th:text="${entry.pointsFor}">For</td>
+			                    <td th:text="${entry.pts}">Pts</td>
+			                    <td class="float-text" th:text="${entry.percentage}">%</td>
+			                </tr>
+			            </tbody>
+			        </table>
+				</div>
+			</div>
+		</div>
+		<div th:unless="${#lists.isEmpty(ladder)}">
+			<div class="panel panel-default margin-tb-5">
+			  	<div th:text="${'Round ' + currentRound + 'Ladder'}" class="panel-heading bold-font">Away Team</div>
+			    <div class="panel-body pad-5">
+				   <table id="ladder" class="table table-striped table-bordered center" cellspacing="0" width="100%">
+			            <thead>
+				                <tr>
+					            <th>Team</th>
+					            <th>W</th>
+					            <th>L</th>
+					            <th>D</th>
+					            <th>For</th>
+					            <th>Ave For</th>
+					            <th>Agst</th>
+					            <th>Ave Agst</th>
+					            <th>Pts</th>
+					            <th>%</th>
+					        </tr>
+				        </thead>
+				        <tbody>
+			                <tr th:each="entry: ${ladder}">
+			                    <td th:text="${entry.displayName}">Team</td>
+			                    <td th:text="${entry.wins}">W</td>
+			                    <td th:text="${entry.losses}">L</td>
+			                    <td th:text="${entry.draws}">D</td>
+			                    <td th:text="${entry.pointsFor}">For</td>
+			                    <td class="float-text" th:text="${entry.averageFor}">Ave For</td>
+			                    <td th:text="${entry.pointsAgainst}">Agst</td>
+			                    <td class="float-text" th:text="${entry.averageAgainst}">Ave Agst</td>
+			                    <td th:text="${entry.pts}">Pts</td>
+			                    <td class="float-text" th:text="${entry.percentage}">%</td>
+			                </tr>
+			            </tbody>
+			        </table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

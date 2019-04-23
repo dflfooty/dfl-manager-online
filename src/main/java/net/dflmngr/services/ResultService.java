@@ -203,8 +203,8 @@ public class ResultService {
 				if(sp.isDnp()) {
 					currentPredictedScore = currentPredictedScore + 0;
 				} else {
-					//if(sp.getStats().getScore() == 0) {
-					if(!sp.hasPlayer()) {
+					if(sp.getStats().getScore() == 0) {
+					//if(!sp.hasPlayer()) {
 						currentPredictedScore = currentPredictedScore + sp.getStats().getPredictedScore();
 					} else {
 						currentPredictedScore = currentPredictedScore + sp.getStats().getScore();
