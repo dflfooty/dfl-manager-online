@@ -73,11 +73,6 @@ a, a:hover, a:focus {
     background: #fff;
 }
 
-table.center {
-  margin-left:auto; 
-  margin-right:auto;
-}
-
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
