@@ -3,7 +3,7 @@ package net.dflmngr.services;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,7 @@ import net.dflmngr.model.entities.DflSelectedPlayer;
 import net.dflmngr.model.entities.DflTeam;
 import net.dflmngr.model.entities.DflTeamPredictedScores;
 import net.dflmngr.model.entities.DflTeamScores;
+import net.dflmngr.model.entities.Globals;
 import net.dflmngr.model.entities.RawPlayerStats;
 import net.dflmngr.model.entities.keys.DflFixturePK;
 import net.dflmngr.model.entities.keys.DflPlayerPredictedScoresPK;
@@ -95,8 +96,8 @@ public class ResultService {
 		globalsPK.setCode("currentRound");
 		globalsPK.setGroupCode("dflRef");
 		
-		int currentRound = Integer.parseInt(globalsRespository.findOne(globalsPK).getValue());
-		
+		Globals currentRoundGlobal = globalsRespository.findById(globalsPK).orElseThrow();
+		int currentRound = Integer.parseInt(currentRoundGlobal.getValue());
 		Results results = getResults(currentRound, 1);
 		
 		return results;
@@ -130,11 +131,7 @@ public class ResultService {
 				String resultsUri = "/results/" + dflFixture.getRound() + "/" + dflFixture.getGame();
 				gameMenu.setResultsUri(resultsUri);
 				
-				if(dflFixture.getRound() == round && dflFixture.getGame() == game) {
-					gameMenu.setActive(true);
-				} else {
-					gameMenu.setActive(false);
-				}
+				gameMenu.setActive(dflFixture.getRound() == round && dflFixture.getGame() == game);
 				
 				if(currentRound == dflFixture.getRound()) {
 					games.add(gameMenu);
@@ -142,13 +139,8 @@ public class ResultService {
 					games.sort(gamesComparator);
 					
 					roundMenu.setRound(currentRound);
-					roundMenu.setGames(games);
-					
-					if(currentRound == round) {
-						roundMenu.setActive(true);
-					} else {
-						roundMenu.setActive(false);
-					}
+					roundMenu.setGames(games);					
+					roundMenu.setActive(currentRound == round);
 					
 					menu.add(roundMenu);
 					
@@ -165,14 +157,9 @@ public class ResultService {
 			games.sort(gamesComparator);
 			
 			roundMenu.setRound(currentRound);
-			roundMenu.setGames(games);
-			
-			if(currentRound == round) {
-				roundMenu.setActive(true);
-			} else {
-				roundMenu.setActive(false);
-			}
-			
+			roundMenu.setGames(games);			
+			roundMenu.setActive(currentRound == round);
+
 			menu.add(roundMenu);
 		}
 		
@@ -186,7 +173,7 @@ public class ResultService {
 		
 		TeamResults teamResults = new TeamResults();
 		
-		DflTeam team = dflTeamRepository.findOne(teamCode);
+		DflTeam team = dflTeamRepository.findById(teamCode).orElseThrow();
 		teamResults.setTeamCode(teamCode);
 		teamResults.setTeamName(team.getName());
 		
@@ -204,7 +191,6 @@ public class ResultService {
 					currentPredictedScore = currentPredictedScore + 0;
 				} else {
 					if(sp.getStats().getScore() == 0) {
-					//if(!sp.hasPlayer()) {
 						currentPredictedScore = currentPredictedScore + sp.getStats().getPredictedScore();
 					} else {
 						currentPredictedScore = currentPredictedScore + sp.getStats().getScore();
@@ -243,12 +229,12 @@ public class ResultService {
 		DflTeamScoresPK dflTeamScoresPK = new DflTeamScoresPK();
 		dflTeamScoresPK.setRound(round);
 		dflTeamScoresPK.setTeamCode(teamCode);
-		DflTeamScores dflTeamScore = dflTeamScoresRepository.findOne(dflTeamScoresPK);
+		DflTeamScores dflTeamScore = dflTeamScoresRepository.findById(dflTeamScoresPK).orElseThrow();
 		
 		DflTeamPredictedScoresPK dflTeamPredictedScoresPK = new DflTeamPredictedScoresPK();
 		dflTeamPredictedScoresPK.setRound(round);
 		dflTeamPredictedScoresPK.setTeamCode(teamCode);
-		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findOne(dflTeamPredictedScoresPK);
+		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findById(dflTeamPredictedScoresPK).orElseThrow();
 		
 		if(dflTeamScore != null) {
 			teamResults.setScore(dflTeamScore.getScore());
@@ -259,7 +245,6 @@ public class ResultService {
 		teamResults.setCurrentPredictedScore(currentPredictedScore);
 		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
 		
-		//int trend = dflTeamScore.getScore() - dflTeamPredictedScore.getPredictedScore();
 		int trend = 0;
 		if(currentPredictedScore == dflTeamPredictedScore.getPredictedScore()) {
 			trend = teamResults.getScore() - dflTeamPredictedScore.getPredictedScore();
@@ -277,7 +262,7 @@ public class ResultService {
 		sp.setPlayerId(selectedPlayer.getPlayerId());
 		sp.setTeamPlayerId(selectedPlayer.getTeamPlayerId());
 		
-		DflPlayer player = dflPlayerRepository.findOne(selectedPlayer.getPlayerId());
+		DflPlayer player = dflPlayerRepository.findById(selectedPlayer.getPlayerId()).orElseThrow();
 		
 		if(player.getInitial() == null || player.getInitial().isEmpty()) {
 			sp.setName(player.getFirstName() + " " + player.getLastName());
@@ -329,16 +314,16 @@ public class ResultService {
 		dflPlayerScoresPK.setPlayerId(playerId);
 		dflPlayerScoresPK.setRound(round);
 		
-		DflPlayerScores dflPlayerScores = dflPlayerScoresRepository.findOne(dflPlayerScoresPK);
+		DflPlayerScores dflPlayerScores = dflPlayerScoresRepository.findById(dflPlayerScoresPK).orElseThrow();
 		
 		DflPlayerPredictedScoresPK dflPlayerPredictedScoresPK = new DflPlayerPredictedScoresPK();
 		dflPlayerPredictedScoresPK.setPlayerId(playerId);
 		dflPlayerPredictedScoresPK.setRound(round);
 		
-		DflPlayerPredictedScores dflPlayerPredictedScores = dflPlayerPredictedScoresRepository.findOne(dflPlayerPredictedScoresPK);
+		Optional<DflPlayerPredictedScores> dflPlayerPredictedScores = dflPlayerPredictedScoresRepository.findById(dflPlayerPredictedScoresPK);
 		
-		if(dflPlayerPredictedScores != null) {
-			playerStats.setPredictedScore(dflPlayerPredictedScores.getPredictedScore());
+		if(dflPlayerPredictedScores.isPresent()) {
+			playerStats.setPredictedScore(dflPlayerPredictedScores.get().getPredictedScore());
 		} else {
 			playerStats.setPredictedScore(25);
 		}
@@ -361,7 +346,7 @@ public class ResultService {
 		pk.setRound(round);
 		pk.setGame(game);
 		
-		DflFixture fixture = dflFixtureRepository.findOne(pk);
+		DflFixture fixture = dflFixtureRepository.findById(pk).orElseThrow();
 		
 		return fixture;
 	}
