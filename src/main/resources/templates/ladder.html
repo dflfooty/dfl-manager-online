@@ -11,6 +11,7 @@
 	<script src="../../../static/js/datatables-1.10.16.min.js" th:src="@{/static/js/datatables-1.10.16.min.js}" type="text/javascript"></script>
 	<script src="../../../static/js/functions.js" th:src="@{/static/js/functions.js}" type="text/javascript"></script>
 	<script type="text/javascript">
+		/*<![CDATA[*/
 		$(document).ready(function() {
 		    $("#ladder").DataTable({
 		    	"order": [[8, 'desc'],[9, 'desc'],[4, 'desc']],
@@ -32,7 +33,7 @@
 		    
 		    formatFloatText();
 		});
-
+                /*]]>*/
 	</script>
 </head>
 <body>
