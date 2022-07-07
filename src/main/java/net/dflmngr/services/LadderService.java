@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.dflmngr.model.entities.DflLadder;
@@ -21,7 +20,6 @@ public class LadderService {
 	private final DflLadderRepository dflLadderRepository;
 	private final DflTeamRepository dflTeamRepository;
 	
-	@Autowired
 	public LadderService(DflLadderRepository dflLadderRepository, DflTeamRepository dflTeamRepository) {
 		this.dflLadderRepository = dflLadderRepository;
 		this.dflTeamRepository = dflTeamRepository;
@@ -33,9 +31,7 @@ public class LadderService {
 		
 		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(DflTeam::getTeamCode, item -> item));
 		
-		List<Ladder> ladder = createLadder(dflLadder, dflTeams);
-			
-		return ladder;
+		return createLadder(dflLadder, dflTeams);
 	}
 	
 	public List<Ladder> getLiveLadder() {
@@ -44,9 +40,7 @@ public class LadderService {
 		
 		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(DflTeam::getTeamCode, item -> item));
 		
-		List<Ladder> ladder = createLadder(dflLadder, dflTeams);
-			
-		return ladder;
+		return createLadder(dflLadder, dflTeams);
 	}
 	
 	private List<Ladder> createLadder(List<DflLadder> dflLadder, Map<String, DflTeam> dflTeams) {
@@ -68,7 +62,6 @@ public class LadderService {
 			l.setPercentage(team.getPercentage());
 			
 			String hashKey = team.getTeamCode();
-			dflTeams.get(hashKey);
 			l.setDisplayName(dflTeams.get(hashKey).getName());
 			
 			String teamUri =  "/teams/" + team.getTeamCode().toLowerCase();

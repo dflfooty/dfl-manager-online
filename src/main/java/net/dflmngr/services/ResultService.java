@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.dflmngr.model.entities.AflPlayer;
@@ -57,7 +56,6 @@ public class ResultService {
 	private final DflTeamPredictedScoresRepository dflTeamPredictedScoresRepository;
 	private final GlobalsRespository globalsRespository;
 	
-	@Autowired
 	public ResultService(DflFixtureRepository dflFixtureRepository, DflTeamRepository dflTeamRepository, DflPlayerRepository dflPlayerRepository, AflPlayerRepository aflPlayerRepository,
 			             DflSelectedPlayerRepository dflSelectedPlayerRepository, RawPlayerStatsRepository rawPlayerStatsRepository, DflPlayerScoresRepository dflPlayerScoresRepository,
 			             DflPlayerPredictedScoresRepository dflPlayerPredictedScoresRepository, DflTeamScoresRepository dflTeamScoresRepository,
@@ -98,9 +96,8 @@ public class ResultService {
 		
 		Globals currentRoundGlobal = globalsRespository.findById(globalsPK).orElseThrow();
 		int currentRound = Integer.parseInt(currentRoundGlobal.getValue());
-		Results results = getResults(currentRound, 1);
-		
-		return results;
+		return getResults(currentRound, 1);
+
 	}
 	
 	public List<RoundMenu> getMenu(int round, int game) {
@@ -346,9 +343,7 @@ public class ResultService {
 		pk.setRound(round);
 		pk.setGame(game);
 		
-		DflFixture fixture = dflFixtureRepository.findById(pk).orElseThrow();
-		
-		return fixture;
+		return dflFixtureRepository.findById(pk).orElseThrow();
 	}
 	
 	

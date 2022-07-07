@@ -2,13 +2,11 @@ package net.dflmngr.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import net.dflmngr.model.web.Results;
 import net.dflmngr.model.web.RoundMenu;
@@ -18,85 +16,89 @@ import net.dflmngr.services.ResultService;
 @Controller
 public class ResultController {
 	
-	private final String RESULTS_VIEW = "results";
+	private static final String RESULTS = "results";
+	private static final String HOME_EMG_MESSAGE = "homeEmgMessage";
+	private static final String AWAY_EMG_MESSAGE = "awayEmgMessage";
+	private static final String RESULTS_EMG_STAR = "results.emg.star";
+	private static final String RESULTS_EMG_DBLSTAR = "results.emg.doublestar";
+	private static final String RESULTS_EMG_TRIPSTAR = "results.emg.tripplestar";
 
 	private final ResultService resultService;
-	
-	@Autowired
+
 	public ResultController(ResultService resultService) {
 		this.resultService = resultService;
 	}
 	
     @ModelAttribute("module")
     public String module() {
-        return "results";
+        return RESULTS;
     }
 	
     
-	@RequestMapping(value = "/results/{round}/{game}", method = RequestMethod.GET, produces = "text/html")
+	@GetMapping(value = "/results/{round}/{game}", produces = "text/html")
 	public String results(@PathVariable int round, @PathVariable int game, Model model) {
 		Results results = resultService.getResults(round, game);
-		model.addAttribute("results", results);
+		model.addAttribute(RESULTS, results);
 		
 		TeamResults team = results.getHomeTeam();
 		if(team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
-				model.addAttribute("homeEmgMessage", "results.emg.star");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute("homeEmgMessage", "results.emg.doublestar");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
 			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute("homeEmgMessage", "results.emg.tripplestar");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
 			}
 		}
 		
 		team = results.getAwayTeam();
 		if(team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
-				model.addAttribute("awayEmgMessage", "results.emg.star");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute("awayEmgMessage", "results.emg.doublestar");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
 			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute("awayEmgMessage", "results.emg.tripplestar");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
 			}
 		}
 		
 		List<RoundMenu> roundsMenu = resultService.getMenu(round, game);
 		model.addAttribute("menu", roundsMenu);
 		
-		return RESULTS_VIEW;
+		return RESULTS;
 	}
 	
-	@RequestMapping(value = "/results", method = RequestMethod.GET, produces = "text/html")
+	@GetMapping(value = "/results", produces = "text/html")
 	public String currentResults(Model model) {
 		Results results = resultService.getCurrentResults();
-		model.addAttribute("results", results);
+		model.addAttribute(RESULTS, results);
 		
 		TeamResults team = results.getHomeTeam();
 		if(team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
-				model.addAttribute("homeEmgMessage", "results.emg.star");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute("homeEmgMessage", "results.emg.doublestar");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
 			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute("homeEmgMessage", "results.emg.tripplestar");
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
 			}
 		}
 		
 		team = results.getAwayTeam();
 		if(team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
-				model.addAttribute("awayEmgMessage", "results.emg.star");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute("awayEmgMessage", "results.emg.doublestar");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
 			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute("awayEmgMessage", "results.emg.tripplestar");
+				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
 			}
 		}
 		
 		List<RoundMenu> roundsMenu = resultService.getMenu(results.getRound(), results.getGame());
 		model.addAttribute("menu", roundsMenu);
 		
-		return RESULTS_VIEW;
+		return RESULTS;
 	}
 
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.dflmngr.model.entities.DflFixture;
@@ -30,8 +29,7 @@ public class FixtureService {
 	private final DflTeamScoresRepository dflTeamScoresRepository;
 	private final DflTeamRepository dflTeamRepository;
 	private final DflSelectedPlayerRepository dflSelectedPlayerRepository;
-	
-	@Autowired
+
 	public FixtureService(DflFixtureRepository dflFixtureRepository, DflTeamScoresRepository dflTeamScoresRepository, DflTeamRepository dflTeamRepository, DflSelectedPlayerRepository dflSelectedPlayerRepository) {
 		this.dflFixtureRepository = dflFixtureRepository;
 		this.dflTeamScoresRepository = dflTeamScoresRepository;
@@ -61,13 +59,13 @@ public class FixtureService {
 		
 		Comparator<GameFixture> gamesComparator = Comparator.comparingInt(GameFixture::getGame);
 		
-		logger.debug("DFL Fixtures: " + dflFixtures);
-		logger.debug("DFL Teams: " + dflTeams);
+		logger.debug("DFL Fixtures: {}", dflFixtures);
+		logger.debug("DFL Teams: {}", dflTeams);
 		
 		for(DflFixture dflFixture : dflFixtures) {			
 			GameFixture game = new GameFixture();
 			
-			logger.debug("Round={}, Game={}, Home={}, Away={}" + dflFixture.getRound(), dflFixture.getGame(), dflFixture.getHomeTeam(), dflFixture.getAwayTeam());
+			logger.debug("Round={}, Game={}, Home={}, Away={}", dflFixture.getRound(), dflFixture.getGame(), dflFixture.getHomeTeam(), dflFixture.getAwayTeam());
 			
 			game.setGame(dflFixture.getGame());
 			game.setHomeTeam(dflFixture.getHomeTeam());
