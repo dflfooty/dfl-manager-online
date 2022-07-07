@@ -226,7 +226,7 @@ public class ResultService {
 		DflTeamScoresPK dflTeamScoresPK = new DflTeamScoresPK();
 		dflTeamScoresPK.setRound(round);
 		dflTeamScoresPK.setTeamCode(teamCode);
-		DflTeamScores dflTeamScore = dflTeamScoresRepository.findById(dflTeamScoresPK).orElseThrow();
+		DflTeamScores dflTeamScore = dflTeamScoresRepository.findById(dflTeamScoresPK).orElse(null);
 		
 		DflTeamPredictedScoresPK dflTeamPredictedScoresPK = new DflTeamPredictedScoresPK();
 		dflTeamPredictedScoresPK.setRound(round);
@@ -311,7 +311,7 @@ public class ResultService {
 		dflPlayerScoresPK.setPlayerId(playerId);
 		dflPlayerScoresPK.setRound(round);
 		
-		DflPlayerScores dflPlayerScores = dflPlayerScoresRepository.findById(dflPlayerScoresPK).orElseThrow();
+		DflPlayerScores dflPlayerScores = dflPlayerScoresRepository.findById(dflPlayerScoresPK).orElse(null);
 		
 		DflPlayerPredictedScoresPK dflPlayerPredictedScoresPK = new DflPlayerPredictedScoresPK();
 		dflPlayerPredictedScoresPK.setPlayerId(playerId);
