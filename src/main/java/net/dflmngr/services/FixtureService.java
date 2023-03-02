@@ -48,7 +48,7 @@ public class FixtureService {
 		
 		Map<String, DflTeamScores> dflTeamScores = dflTeamScoresList.stream().collect(Collectors.toMap(
 												  teamScore -> teamScore.getTeamCode() + ":" + teamScore.getRound(), teamScore -> teamScore));
-		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(team -> team.getTeamCode(), team -> team));
+		Map<String, DflTeam> dflTeams = dflTeamsList.stream().collect(Collectors.toMap(DflTeam::getTeamCode, team -> team));
 		
 		Comparator<DflFixture> dflFixtureComparator = Comparator.comparingInt(DflFixture::getRound).thenComparingInt(DflFixture::getGame);
 		dflFixtures.sort(dflFixtureComparator);

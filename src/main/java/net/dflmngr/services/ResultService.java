@@ -173,53 +173,15 @@ public class ResultService {
 		DflTeam team = dflTeamRepository.findById(teamCode).orElseThrow();
 		teamResults.setTeamCode(teamCode);
 		teamResults.setTeamName(team.getName());
-		
-		List<DflSelectedPlayer> selectedTeam = dflSelectedPlayerRepository.findByRoundAndTeamCode(round, teamCode);
-				
+						
 		List<SelectedPlayer> players = new ArrayList<>();
 		List<SelectedPlayer> emergencies = new ArrayList<>();
 		
-		int currentPredictedScore = 0;
-		for(DflSelectedPlayer selectedPlayer : selectedTeam) {
-			if(selectedPlayer.isScoreUsed()) {
-				SelectedPlayer sp = getSelectedPlayer(selectedPlayer);
-				players.add(sp);
-				if(sp.isDnp()) {
-					currentPredictedScore = currentPredictedScore + 0;
-				} else {
-					if(sp.getStats().getScore() == 0) {
-						currentPredictedScore = currentPredictedScore + sp.getStats().getPredictedScore();
-					} else {
-						currentPredictedScore = currentPredictedScore + sp.getStats().getScore();
-					}
-				}
-			} else {
-				emergencies.add(getSelectedPlayer(selectedPlayer));
-			}
-		}
+		int currentPredictedScore = calculateTeamScore(round, teamCode, players, emergencies);
 		
 		teamResults.setPlayers(players);
 		
-		boolean star = false;
-		boolean doubleStar = false;
-		
-		for(SelectedPlayer emg : emergencies) {
-			if(emg.getReplacementInd() != null) {
-				if(emg.getReplacementInd().equals("*")) {
-					star = true;
-				} else if(emg.getReplacementInd().equals("**")) {
-					doubleStar = true;
-				}
-			}
-		}
-		
-		if(star && !doubleStar) {
-			teamResults.setEmgInd("*");
-		} else if(!star && doubleStar) {
-			teamResults.setEmgInd("**");
-		} else if(star && doubleStar) {
-			teamResults.setEmgInd("*/**");
-		}
+		setEmgsInd(emergencies, teamResults);
 		
 		teamResults.setEmergencies(emergencies);
 		
@@ -251,6 +213,31 @@ public class ResultService {
 		teamResults.setTrend(trend);
 		
 		return teamResults;
+	}
+
+	private int calculateTeamScore(int round, String teamCode, List<SelectedPlayer> players, List<SelectedPlayer> emergencies) {
+		List<DflSelectedPlayer> selectedTeam = dflSelectedPlayerRepository.findByRoundAndTeamCode(round, teamCode);
+
+		int currentPredictedScore = 0;
+		for(DflSelectedPlayer selectedPlayer : selectedTeam) {
+			if(selectedPlayer.isScoreUsed()) {
+				SelectedPlayer sp = getSelectedPlayer(selectedPlayer);
+				players.add(sp);
+				if(sp.isDnp()) {
+					currentPredictedScore = currentPredictedScore + 0;
+				} else {
+					if(sp.getStats().getScore() == 0) {
+						currentPredictedScore = currentPredictedScore + sp.getStats().getPredictedScore();
+					} else {
+						currentPredictedScore = currentPredictedScore + sp.getStats().getScore();
+					}
+				}
+			} else {
+				emergencies.add(getSelectedPlayer(selectedPlayer));
+			}
+		}
+
+		return currentPredictedScore;
 	}
 	
 	private SelectedPlayer getSelectedPlayer(DflSelectedPlayer selectedPlayer) {
@@ -284,6 +271,31 @@ public class ResultService {
 		sp.setStats(getPlayerStats(selectedPlayer.getRound(), selectedPlayer.getPlayerId()));
 		
 		return sp;
+	}
+
+	private void setEmgsInd(List<SelectedPlayer> emergencies, TeamResults teamResults) {
+		boolean star = false;
+		boolean doubleStar = false;
+
+		for(SelectedPlayer emg : emergencies) {
+			if(emg.getReplacementInd() != null) {
+				if(emg.getReplacementInd().equals("*")) {
+					star = true;
+				} else if(emg.getReplacementInd().equals("**")) {
+					doubleStar = true;
+				}
+			}
+		}
+		
+		if(star && !doubleStar) {
+			teamResults.setEmgInd("*");
+		} 
+		if(!star && doubleStar) {
+			teamResults.setEmgInd("**");
+		}
+		if(star && doubleStar) {
+			teamResults.setEmgInd("*/**");
+		}
 	}
 	
 	private PlayerStats getPlayerStats(int round, int playerId) {

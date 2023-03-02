@@ -14,21 +14,6 @@ public class TeamResults {
 	private int trend;
 	private String emgInd;
 	
-	public TeamResults() {}
-	
-	public TeamResults(String teamCode, String teamName, List<SelectedPlayer> players,
-			List<SelectedPlayer> emergencies, int score, int predictedScore, int trend, String emgInd) {
-		super();
-		this.teamCode = teamCode;
-		this.teamName = teamName;
-		this.players = players;
-		this.emergencies = emergencies;
-		this.score = score;
-		this.predictedScore = predictedScore;
-		this.trend = trend;
-		this.emgInd = emgInd;
-	}
-
 	public String getTeamCode() {
 		return teamCode;
 	}
