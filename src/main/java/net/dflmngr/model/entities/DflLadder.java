@@ -2,11 +2,11 @@ package net.dflmngr.model.entities;
 
 import java.util.Comparator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
 import net.dflmngr.model.entities.keys.DflLadderPK;
 
@@ -177,33 +177,28 @@ public class DflLadder implements Comparator<DflLadder>, Comparable<DflLadder> {
 		int less = -1;
 		int greater = 1;
 		
-		int pts = this.getPts();
-		int oPts = o.getPts();
-		
-		if(pts > oPts) {
+
+		int oPts = o.getPts();		
+		if(this.getPts() > oPts) {
 			return greater;
 		}
-		if(pts < oPts) {
+		if(this.getPts() < oPts) {
+			return less;
+		}
+
+		float oPercentage = o.getPercentage();		
+		if(this.getPercentage() > oPercentage) {
+			return greater;
+		}
+		if(this.getPercentage() < oPercentage) {
 			return less;
 		}
 		
-		float percentage = this.getPercentage();
-		float oPercentage = o.getPercentage();
-		
-		if(percentage > oPercentage) {
+		int oPointsFor = o.getPointsFor();		
+		if(this.getPointsFor() > oPointsFor) {
 			return greater;
 		}
-		if(percentage < oPercentage) {
-			return less;
-		}
-		
-		int pointsFor = this.getPointsFor();
-		int oPointsFor = o.getPointsFor();
-		
-		if(pointsFor > oPointsFor) {
-			return greater;
-		}
-		if(pointsFor < oPointsFor) {
+		if(this.getPointsFor() < oPointsFor) {
 			return less;
 		}
 		

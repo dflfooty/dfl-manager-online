@@ -2,11 +2,11 @@ package net.dflmngr.model.entities;
 
 import java.util.Comparator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
 
 import net.dflmngr.model.entities.keys.DflPlayerPredictedScoresPK;
 
@@ -122,11 +122,23 @@ public class DflPlayerPredictedScores implements Comparator<DflPlayerPredictedSc
 	
 	@Override
 	public int compareTo(DflPlayerPredictedScores o) {
-		return this.predictedScore > o.predictedScore ? 1 : (this.predictedScore < o.predictedScore ? -1 : 0);
+		int equal = 0;
+		if(predictedScore > o.predictedScore) {
+			equal = 1;
+		} else if(this.predictedScore < o.predictedScore) {
+			equal = -1;
+		}
+		return equal;
 	}
 	
 	@Override
 	public int compare(DflPlayerPredictedScores o1, DflPlayerPredictedScores o2) {
-		return o1.predictedScore > o2.predictedScore ? 1 : (o2.predictedScore < o2.predictedScore ? -1 : 0);
+		int equal = 0;
+		if(o1.predictedScore > o2.predictedScore) {
+			equal = 1;
+		} else if(o1.predictedScore < o2.predictedScore) {
+			equal = -1;
+		}
+		return equal;
 	}
 }
