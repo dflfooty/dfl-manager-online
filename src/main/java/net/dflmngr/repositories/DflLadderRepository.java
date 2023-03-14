@@ -10,9 +10,9 @@ import net.dflmngr.model.entities.keys.DflLadderPK;
 
 public interface DflLadderRepository extends JpaRepository<DflLadder, DflLadderPK> {
 	
-	@Query("select l from DflLadder l where l.round = (select max(round) from DflLadder where live = false)")
+	@Query("select l from DflLadder l where l.round = (select max(round) from DflLadder where l.live = false)")
 	public List<DflLadder> findCurrentDflLadder();
 	
-	@Query("select l from DflLadder l where l.round = (select max(round) from DflLadder where live = true)")
+	@Query("select l from DflLadder l where l.round = (select max(round) from DflLadder where l.live = true)")
 	public List<DflLadder> findLiveDflLadder();
 }
