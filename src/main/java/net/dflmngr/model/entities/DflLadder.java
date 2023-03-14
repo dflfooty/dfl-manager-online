@@ -40,6 +40,7 @@ public class DflLadder implements Comparator<DflLadder>, Comparable<DflLadder> {
 	
 	private int pts;
 	private float percentage;
+	private boolean live;
 	
 	public int getRound() {
 		return round;
@@ -107,32 +108,40 @@ public class DflLadder implements Comparator<DflLadder>, Comparable<DflLadder> {
 	public void setPercentage(float percentage) {
 		this.percentage = percentage;
 	}
+	public boolean isLive() {
+		return live;
+	}
+	public void setLive(boolean live) {
+		this.live = live;
+	}
 	
 	@Override
 	public String toString() {
 		return "DflLadder [round=" + round + ", teamCode=" + teamCode + ", wins=" + wins + ", losses=" + losses
 				+ ", draws=" + draws + ", pointsFor=" + pointsFor + ", pointsAgainst=" + pointsAgainst + ", averageFor="
 				+ averageFor + ", averageAgainst=" + averageAgainst + ", pts=" + pts + ", percentage=" + percentage
-				+ "]";
+				+ ", live=" + live + "]";
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Float.floatToIntBits(averageAgainst);
-		result = prime * result + Float.floatToIntBits(averageFor);
-		result = prime * result + draws;
-		result = prime * result + losses;
-		result = prime * result + Float.floatToIntBits(percentage);
-		result = prime * result + pointsAgainst;
-		result = prime * result + pointsFor;
-		result = prime * result + pts;
 		result = prime * result + round;
 		result = prime * result + ((teamCode == null) ? 0 : teamCode.hashCode());
 		result = prime * result + wins;
+		result = prime * result + losses;
+		result = prime * result + draws;
+		result = prime * result + pointsFor;
+		result = prime * result + pointsAgainst;
+		result = prime * result + Float.floatToIntBits(averageFor);
+		result = prime * result + Float.floatToIntBits(averageAgainst);
+		result = prime * result + pts;
+		result = prime * result + Float.floatToIntBits(percentage);
+		result = prime * result + (live ? 1231 : 1237);
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -142,22 +151,6 @@ public class DflLadder implements Comparator<DflLadder>, Comparable<DflLadder> {
 		if (getClass() != obj.getClass())
 			return false;
 		DflLadder other = (DflLadder) obj;
-		if (Float.floatToIntBits(averageAgainst) != Float.floatToIntBits(other.averageAgainst))
-			return false;
-		if (Float.floatToIntBits(averageFor) != Float.floatToIntBits(other.averageFor))
-			return false;
-		if (draws != other.draws)
-			return false;
-		if (losses != other.losses)
-			return false;
-		if (Float.floatToIntBits(percentage) != Float.floatToIntBits(other.percentage))
-			return false;
-		if (pointsAgainst != other.pointsAgainst)
-			return false;
-		if (pointsFor != other.pointsFor)
-			return false;
-		if (pts != other.pts)
-			return false;
 		if (round != other.round)
 			return false;
 		if (teamCode == null) {
@@ -166,6 +159,24 @@ public class DflLadder implements Comparator<DflLadder>, Comparable<DflLadder> {
 		} else if (!teamCode.equals(other.teamCode))
 			return false;
 		if (wins != other.wins)
+			return false;
+		if (losses != other.losses)
+			return false;
+		if (draws != other.draws)
+			return false;
+		if (pointsFor != other.pointsFor)
+			return false;
+		if (pointsAgainst != other.pointsAgainst)
+			return false;
+		if (Float.floatToIntBits(averageFor) != Float.floatToIntBits(other.averageFor))
+			return false;
+		if (Float.floatToIntBits(averageAgainst) != Float.floatToIntBits(other.averageAgainst))
+			return false;
+		if (pts != other.pts)
+			return false;
+		if (Float.floatToIntBits(percentage) != Float.floatToIntBits(other.percentage))
+			return false;
+		if (live != other.live)
 			return false;
 		return true;
 	}
