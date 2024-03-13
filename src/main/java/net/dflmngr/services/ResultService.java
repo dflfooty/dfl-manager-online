@@ -3,6 +3,7 @@ package net.dflmngr.services;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -83,8 +84,12 @@ public class ResultService {
 		String homeTeamCode = dflFixture.getHomeTeam();
 		String awayTeamCode = dflFixture.getAwayTeam();
 		
-		results.setHomeTeam(getTeamResults(round, homeTeamCode));
-		results.setAwayTeam(getTeamResults(round, awayTeamCode));
+		try {
+			results.setHomeTeam(getTeamResults(round, homeTeamCode));
+			results.setAwayTeam(getTeamResults(round, awayTeamCode));
+		} catch (NoSuchElementException ex) {
+			ex.printStackTrace();
+		}
 			
 		return results;
 	}

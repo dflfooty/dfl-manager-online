@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-WebApplication<dflmngr-online>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "net.dflmngr.WebApplication",
+            "projectName": "dflmngr-online",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
