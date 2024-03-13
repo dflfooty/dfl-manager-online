@@ -80,11 +80,11 @@ public class ResultService {
 		results.setRound(round);
 		results.setGame(game);
 		
-		DflFixture dflFixture = getFixture(round, game);
-		String homeTeamCode = dflFixture.getHomeTeam();
-		String awayTeamCode = dflFixture.getAwayTeam();
-		
 		try {
+			DflFixture dflFixture = getFixture(round, game);
+			String homeTeamCode = dflFixture.getHomeTeam();
+			String awayTeamCode = dflFixture.getAwayTeam();
+
 			results.setHomeTeam(getTeamResults(round, homeTeamCode));
 			results.setAwayTeam(getTeamResults(round, awayTeamCode));
 		} catch (NoSuchElementException ex) {
@@ -175,47 +175,49 @@ public class ResultService {
 		
 		TeamResults teamResults = new TeamResults();
 		
-		DflTeam team = dflTeamRepository.findById(teamCode).orElseThrow();
-		teamResults.setTeamCode(teamCode);
-		teamResults.setTeamName(team.getName());
-						
-		List<SelectedPlayer> players = new ArrayList<>();
-		List<SelectedPlayer> emergencies = new ArrayList<>();
-		
-		int currentPredictedScore = calculateTeamScore(round, teamCode, players, emergencies);
-		
-		teamResults.setPlayers(players);
-		
-		setEmgsInd(emergencies, teamResults);
-		
-		teamResults.setEmergencies(emergencies);
-		
-		DflTeamScoresPK dflTeamScoresPK = new DflTeamScoresPK();
-		dflTeamScoresPK.setRound(round);
-		dflTeamScoresPK.setTeamCode(teamCode);
-		DflTeamScores dflTeamScore = dflTeamScoresRepository.findById(dflTeamScoresPK).orElse(null);
-		
-		DflTeamPredictedScoresPK dflTeamPredictedScoresPK = new DflTeamPredictedScoresPK();
-		dflTeamPredictedScoresPK.setRound(round);
-		dflTeamPredictedScoresPK.setTeamCode(teamCode);
-		DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findById(dflTeamPredictedScoresPK).orElseThrow();
-		
-		if(dflTeamScore != null) {
-			teamResults.setScore(dflTeamScore.getScore());
-		} else {
-			teamResults.setScore(0);
+		if(teamCode != null) {
+			DflTeam team = dflTeamRepository.findById(teamCode).orElseThrow();
+			teamResults.setTeamCode(teamCode);
+			teamResults.setTeamName(team.getName());
+
+			List<SelectedPlayer> players = new ArrayList<>();
+			List<SelectedPlayer> emergencies = new ArrayList<>();
+			
+			int currentPredictedScore = calculateTeamScore(round, teamCode, players, emergencies);
+			
+			teamResults.setPlayers(players);
+			
+			setEmgsInd(emergencies, teamResults);
+			
+			teamResults.setEmergencies(emergencies);
+			
+			DflTeamScoresPK dflTeamScoresPK = new DflTeamScoresPK();
+			dflTeamScoresPK.setRound(round);
+			dflTeamScoresPK.setTeamCode(teamCode);
+			DflTeamScores dflTeamScore = dflTeamScoresRepository.findById(dflTeamScoresPK).orElse(null);
+			
+			DflTeamPredictedScoresPK dflTeamPredictedScoresPK = new DflTeamPredictedScoresPK();
+			dflTeamPredictedScoresPK.setRound(round);
+			dflTeamPredictedScoresPK.setTeamCode(teamCode);
+			DflTeamPredictedScores dflTeamPredictedScore = dflTeamPredictedScoresRepository.findById(dflTeamPredictedScoresPK).orElseThrow();
+			
+			if(dflTeamScore != null) {
+				teamResults.setScore(dflTeamScore.getScore());
+			} else {
+				teamResults.setScore(0);
+			}
+			
+			teamResults.setCurrentPredictedScore(currentPredictedScore);
+			teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
+			
+			int trend = 0;
+			if(currentPredictedScore == dflTeamPredictedScore.getPredictedScore()) {
+				trend = teamResults.getScore() - dflTeamPredictedScore.getPredictedScore();
+			} else {
+				trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
+			}
+			teamResults.setTrend(trend);
 		}
-		
-		teamResults.setCurrentPredictedScore(currentPredictedScore);
-		teamResults.setPredictedScore(dflTeamPredictedScore.getPredictedScore());
-		
-		int trend = 0;
-		if(currentPredictedScore == dflTeamPredictedScore.getPredictedScore()) {
-			trend = teamResults.getScore() - dflTeamPredictedScore.getPredictedScore();
-		} else {
-			trend = currentPredictedScore - dflTeamPredictedScore.getPredictedScore();
-		}
-		teamResults.setTrend(trend);
 		
 		return teamResults;
 	}

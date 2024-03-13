@@ -33,15 +33,14 @@ public class ResultController {
     public String module() {
         return RESULTS;
     }
-	
-    
+
 	@GetMapping(value = "/results/{round}/{game}", produces = "text/html")
 	public String results(@PathVariable int round, @PathVariable int game, Model model) {
 		Results results = resultService.getResults(round, game);
 		model.addAttribute(RESULTS, results);
 		
 		TeamResults team = results.getHomeTeam();
-		if(team.getEmgInd() != null) {
+		if(team != null && team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
 				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
@@ -52,7 +51,7 @@ public class ResultController {
 		}
 		
 		team = results.getAwayTeam();
-		if(team.getEmgInd() != null) {
+		if(team != null && team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
 				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
@@ -74,7 +73,7 @@ public class ResultController {
 		model.addAttribute(RESULTS, results);
 		
 		TeamResults team = results.getHomeTeam();
-		if(team.getEmgInd() != null) {
+		if(team != null && team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
 				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
@@ -85,7 +84,7 @@ public class ResultController {
 		}
 		
 		team = results.getAwayTeam();
-		if(team.getEmgInd() != null) {
+		if(team != null && team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
 				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
