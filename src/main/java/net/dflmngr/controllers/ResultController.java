@@ -39,28 +39,14 @@ public class ResultController {
 		Results results = resultService.getResults(round, game);
 		model.addAttribute(RESULTS, results);
 		
-		TeamResults team = results.getHomeTeam();
-		if(team != null && team.getEmgInd() != null) {
-			if(team.getEmgInd().equals("*")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
-			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
-			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
-			}
+		if(results != null) {
+			TeamResults team = results.getHomeTeam();
+			setEmgIndicators(team, model);
+			
+			team = results.getAwayTeam();
+			setEmgIndicators(team, model);
 		}
-		
-		team = results.getAwayTeam();
-		if(team != null && team.getEmgInd() != null) {
-			if(team.getEmgInd().equals("*")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
-			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
-			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
-			}
-		}
-		
+
 		List<RoundMenu> roundsMenu = resultService.getMenu(round, game);
 		model.addAttribute("menu", roundsMenu);
 		
@@ -98,6 +84,18 @@ public class ResultController {
 		model.addAttribute("menu", roundsMenu);
 		
 		return RESULTS;
+	}
+
+	private void setEmgIndicators(TeamResults team, Model model) {
+		if(team != null && team.getEmgInd() != null) {
+			if(team.getEmgInd().equals("*")) {
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
+			} else if(team.getEmgInd().equals("**")) {
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
+			} else if(team.getEmgInd().equals("*/**")) {
+				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
+			}
+		}
 	}
 
 }
