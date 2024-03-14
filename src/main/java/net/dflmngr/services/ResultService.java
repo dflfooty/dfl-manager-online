@@ -89,6 +89,7 @@ public class ResultService {
 			results.setAwayTeam(getTeamResults(round, awayTeamCode));
 		} catch (NoSuchElementException ex) {
 			ex.printStackTrace();
+			results = null;
 		}
 			
 		return results;
