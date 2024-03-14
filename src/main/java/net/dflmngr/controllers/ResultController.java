@@ -39,12 +39,12 @@ public class ResultController {
 		Results results = resultService.getResults(round, game);
 		model.addAttribute(RESULTS, results);
 		
-		if(results != null) {
+		if(results.getHomeTeam() != null || results.getAwayTeam() != null) {
 			TeamResults team = results.getHomeTeam();
-			setEmgIndicators(team, model);
+			setEmgIndicators(team, true, model);
 			
 			team = results.getAwayTeam();
-			setEmgIndicators(team, model);
+			setEmgIndicators(team, false, model);
 		}
 
 		List<RoundMenu> roundsMenu = resultService.getMenu(round, game);
@@ -58,26 +58,12 @@ public class ResultController {
 		Results results = resultService.getCurrentResults();
 		model.addAttribute(RESULTS, results);
 		
-		TeamResults team = results.getHomeTeam();
-		if(team != null && team.getEmgInd() != null) {
-			if(team.getEmgInd().equals("*")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
-			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
-			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
-			}
-		}
-		
-		team = results.getAwayTeam();
-		if(team != null && team.getEmgInd() != null) {
-			if(team.getEmgInd().equals("*")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
-			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
-			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute(AWAY_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
-			}
+		if(results.getHomeTeam() != null || results.getAwayTeam() != null) {
+			TeamResults team = results.getHomeTeam();
+			setEmgIndicators(team, true, model);
+			
+			team = results.getAwayTeam();
+			setEmgIndicators(team, false, model);
 		}
 		
 		List<RoundMenu> roundsMenu = resultService.getMenu(results.getRound(), results.getGame());
@@ -86,14 +72,14 @@ public class ResultController {
 		return RESULTS;
 	}
 
-	private void setEmgIndicators(TeamResults team, Model model) {
+	private void setEmgIndicators(TeamResults team, boolean homeOrAway, Model model) {
 		if(team != null && team.getEmgInd() != null) {
 			if(team.getEmgInd().equals("*")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_STAR);
+				model.addAttribute(homeOrAway ? HOME_EMG_MESSAGE : AWAY_EMG_MESSAGE, RESULTS_EMG_STAR);
 			} else if(team.getEmgInd().equals("**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
+				model.addAttribute(homeOrAway ? HOME_EMG_MESSAGE : AWAY_EMG_MESSAGE, RESULTS_EMG_DBLSTAR);
 			} else if(team.getEmgInd().equals("*/**")) {
-				model.addAttribute(HOME_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
+				model.addAttribute(homeOrAway ? HOME_EMG_MESSAGE : AWAY_EMG_MESSAGE, RESULTS_EMG_TRIPSTAR);
 			}
 		}
 	}

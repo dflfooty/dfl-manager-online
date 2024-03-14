@@ -88,8 +88,7 @@ public class ResultService {
 			results.setHomeTeam(getTeamResults(round, homeTeamCode));
 			results.setAwayTeam(getTeamResults(round, awayTeamCode));
 		} catch (NoSuchElementException ex) {
-			ex.printStackTrace();
-			results = null;
+			//should log something.
 		}
 			
 		return results;
