@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<div id="content" class="container center">
-			<div th:unless="${results OR results.getHomeTeam() OR results.getAwayTeam()}">
+			<div th:unless="${results == null OR results.getHomeTeam() == null OR results.getAwayTeam() == null}">
 				<div class="panel panel-default margin-tb-5">
 			    	<div th:text="${'Home: ' + results.homeTeam.teamName}" class="panel-heading bold-font">Home Team</div>
 		        	<div class="panel-body pad-5">
